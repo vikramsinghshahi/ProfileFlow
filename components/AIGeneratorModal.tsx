@@ -111,7 +111,7 @@ const AIGeneratorModal: React.FC<AIGeneratorModalProps> = ({
       userInfo.push(`- Specific request: ${customRequest.trim()}`);
     }
 
-    return `I want to create a Bento-style "link-in-bio" page with OpenBento.
+    return `I want to create a Bento-style "link-in-bio" page with ProfileFlow.
 
 ${userInfo.length > 0 ? `## My information\n${userInfo.join('\n')}\n` : ''}
 ## Your task

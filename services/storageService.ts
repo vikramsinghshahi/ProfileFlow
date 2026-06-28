@@ -1,10 +1,10 @@
 import { SavedBento, SiteData, BlockType, BlockData, UserProfile } from '../types';
 import { AVATAR_PLACEHOLDER } from '../constants';
 
-const STORAGE_KEY = 'openbento_bentos';
-const ACTIVE_BENTO_KEY = 'openbento_active_bento';
-const ASSETS_KEY = 'openbento_assets';
-const INITIALIZED_KEY = 'openbento_initialized';
+const STORAGE_KEY = 'profileflow_bentos';
+const ACTIVE_BENTO_KEY = 'profileflow_active_bento';
+const ASSETS_KEY = 'profileflow_assets';
+const INITIALIZED_KEY = 'profileflow_initialized';
 export const GRID_VERSION = 2;
 
 // Asset type for uploaded images

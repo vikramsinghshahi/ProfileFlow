@@ -80,7 +80,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   // Load saved config on mount
   useEffect(() => {
     if (isOpen && activeTab === 'analytics') {
-      fetch('/__openbento/config')
+      fetch('/__profileflow/config')
         .then((r) => r.json())
         .then((data) => {
           if (data.ok && data.config) {
@@ -110,7 +110,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     setSetupResult(null);
 
     try {
-      const res = await fetch('/__openbento/supabase/simple-setup', {
+      const res = await fetch('/__profileflow/supabase/simple-setup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -447,9 +447,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                     </h3>
                     <div className="flex items-center justify-between gap-4 p-3 bg-white border border-gray-200 rounded-xl">
                       <div className="min-w-0">
-                        <p className="text-sm font-semibold text-gray-900">Show OpenBento credit</p>
+                        <p className="text-sm font-semibold text-gray-900">Show ProfileFlow credit</p>
                         <p className="text-xs text-gray-400">
-                          Displays the OpenBento footer in the builder and export.
+                          Displays the ProfileFlow footer in the builder and export.
                         </p>
                       </div>
                       <button
@@ -464,7 +464,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                           profile.showBranding !== false ? 'bg-gray-900' : 'bg-gray-200'
                         }`}
                         aria-pressed={profile.showBranding !== false}
-                        aria-label="Toggle OpenBento branding"
+                        aria-label="Toggle ProfileFlow branding"
                       >
                         <span
                           className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform ${
@@ -1289,7 +1289,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                       aria-label="Save analytics configuration"
                       onClick={() => {
                         if (!supabaseProjectUrl || !supabaseAnonKey) return;
-                        fetch('/__openbento/config', {
+                        fetch('/__profileflow/config', {
                           method: 'POST',
                           headers: { 'Content-Type': 'application/json' },
                           body: JSON.stringify({

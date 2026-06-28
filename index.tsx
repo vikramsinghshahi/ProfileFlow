@@ -4,7 +4,7 @@ import App from './App';
 import { COMMON_BLOCK_CSS } from './services/commonStyles';
 
 const styleEl = document.createElement('style');
-styleEl.setAttribute('data-openbento-common', 'true');
+styleEl.setAttribute('data-profileflow-common', 'true');
 styleEl.textContent = COMMON_BLOCK_CSS;
 document.head.appendChild(styleEl);
 

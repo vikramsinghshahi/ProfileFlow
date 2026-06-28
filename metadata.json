@@ -1,5 +1,5 @@
 {
-  "name": "OpenBento",
-  "description": "An open-source personal page builder. Create your Bento-style profile, preview it, and export a deployment-ready package for GitHub Pages with a single click.",
+  "name": "ProfileFlow",
+  "description": "A hosted link-in-bio SaaS for Indian creators. UPI payments, WhatsApp chat, AI bio writer, and Razorpay billing — built for India.",
   "requestFramePermissions": []
 }

@@ -44,11 +44,11 @@ run('supabase db push');
 run(
   `supabase secrets set SUPABASE_SERVICE_ROLE_KEY=${serviceRoleKey} OPENBENTO_ANALYTICS_ADMIN_TOKEN=${adminToken}`
 );
-run('supabase functions deploy openbento-analytics-track --use-api --no-verify-jwt');
-run('supabase functions deploy openbento-analytics-admin --use-api --no-verify-jwt');
+run('supabase functions deploy profileflow-analytics-track --use-api --no-verify-jwt');
+run('supabase functions deploy profileflow-analytics-admin --use-api --no-verify-jwt');
 
 const supabaseUrl =
   process.env.SUPABASE_URL?.trim().replace(/\/+$/, '') || `https://${projectRef}.supabase.co`;
 console.log('\nDone.');
-console.log(`Track endpoint: ${supabaseUrl}/functions/v1/openbento-analytics-track`);
-console.log(`Admin endpoint: ${supabaseUrl}/functions/v1/openbento-analytics-admin`);
+console.log(`Track endpoint: ${supabaseUrl}/functions/v1/profileflow-analytics-track`);
+console.log(`Admin endpoint: ${supabaseUrl}/functions/v1/profileflow-analytics-admin`);

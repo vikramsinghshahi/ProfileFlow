@@ -117,7 +117,7 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 // Simple setup using just DB password (no CLI login needed)
 const simpleSupabaseSetupPlugin = (): Plugin => {
   return {
-    name: 'openbento-supabase-simple-setup',
+    name: 'profileflow-supabase-simple-setup',
     apply: 'serve',
     configureServer(server) {
       const configPath = path.join(server.config.root, '.supabase-config.json');
@@ -127,7 +127,7 @@ const simpleSupabaseSetupPlugin = (): Plugin => {
           if (!req.url) return next();
 
           // Get saved config
-          if (req.method === 'GET' && req.url === '/__openbento/config') {
+          if (req.method === 'GET' && req.url === '/__profileflow/config') {
             try {
               const data = fs.readFileSync(configPath, 'utf8');
               json(res, 200, { ok: true, config: JSON.parse(data) });
@@ -138,7 +138,7 @@ const simpleSupabaseSetupPlugin = (): Plugin => {
           }
 
           // Save config
-          if (req.method === 'POST' && req.url === '/__openbento/config') {
+          if (req.method === 'POST' && req.url === '/__profileflow/config') {
             const body = await readJsonBody(req);
             fs.writeFileSync(configPath, JSON.stringify(body, null, 2));
             json(res, 200, { ok: true });
@@ -146,7 +146,7 @@ const simpleSupabaseSetupPlugin = (): Plugin => {
           }
 
           // Fetch analytics data (dev only)
-          if (req.method === 'POST' && req.url === '/__openbento/analytics/fetch') {
+          if (req.method === 'POST' && req.url === '/__profileflow/analytics/fetch') {
             const body = (await readJsonBody(req)) as any;
             const projectUrl = body?.projectUrl?.trim();
             const dbPassword = body?.dbPassword?.trim();
@@ -175,8 +175,8 @@ const simpleSupabaseSetupPlugin = (): Plugin => {
             try {
               // Fetch all analytics data - using validated parameters only
               const query = siteIdValid
-                ? `SELECT * FROM public.openbento_analytics_events WHERE site_id = '${siteId.replace(/'/g, "''")}' AND created_at > NOW() - INTERVAL '${days} days' ORDER BY created_at DESC LIMIT 10000`
-                : `SELECT * FROM public.openbento_analytics_events WHERE created_at > NOW() - INTERVAL '${days} days' ORDER BY created_at DESC LIMIT 10000`;
+                ? `SELECT * FROM public.profileflow_analytics_events WHERE site_id = '${siteId.replace(/'/g, "''")}' AND created_at > NOW() - INTERVAL '${days} days' ORDER BY created_at DESC LIMIT 10000`
+                : `SELECT * FROM public.profileflow_analytics_events WHERE created_at > NOW() - INTERVAL '${days} days' ORDER BY created_at DESC LIMIT 10000`;
 
               const { stdout } = await execFileAsync(
                 'psql',
@@ -250,7 +250,7 @@ const simpleSupabaseSetupPlugin = (): Plugin => {
           }
 
           // Simple setup with just DB password
-          if (req.method === 'POST' && req.url === '/__openbento/supabase/simple-setup') {
+          if (req.method === 'POST' && req.url === '/__profileflow/supabase/simple-setup') {
             const body = (await readJsonBody(req)) as any;
             const projectUrl = body?.projectUrl?.trim();
             const dbPassword = body?.dbPassword?.trim();
@@ -275,7 +275,7 @@ const simpleSupabaseSetupPlugin = (): Plugin => {
             const migrationSql = `
               create extension if not exists "pgcrypto";
 
-              create table if not exists public.openbento_analytics_events (
+              create table if not exists public.profileflow_analytics_events (
                 id uuid primary key default gen_random_uuid(),
                 created_at timestamptz not null default now(),
                 site_id text not null,
@@ -295,16 +295,16 @@ const simpleSupabaseSetupPlugin = (): Plugin => {
                 screen_h integer
               );
 
-              create index if not exists openbento_analytics_events_site_time_idx
-                on public.openbento_analytics_events (site_id, created_at desc);
+              create index if not exists profileflow_analytics_events_site_time_idx
+                on public.profileflow_analytics_events (site_id, created_at desc);
 
-              alter table public.openbento_analytics_events enable row level security;
+              alter table public.profileflow_analytics_events enable row level security;
 
               DO $$ BEGIN
                 IF NOT EXISTS (
-                  SELECT 1 FROM pg_policies WHERE tablename = 'openbento_analytics_events' AND policyname = 'Allow public inserts'
+                  SELECT 1 FROM pg_policies WHERE tablename = 'profileflow_analytics_events' AND policyname = 'Allow public inserts'
                 ) THEN
-                  CREATE POLICY "Allow public inserts" ON public.openbento_analytics_events FOR INSERT WITH CHECK (true);
+                  CREATE POLICY "Allow public inserts" ON public.profileflow_analytics_events FOR INSERT WITH CHECK (true);
                 END IF;
               END $$;
 
@@ -373,9 +373,9 @@ const simpleSupabaseSetupPlugin = (): Plugin => {
   };
 };
 
-const openbentoSupabaseDevPlugin = (): Plugin => {
+const profileflowSupabaseDevPlugin = (): Plugin => {
   return {
-    name: 'openbento-supabase-dev',
+    name: 'profileflow-supabase-dev',
     apply: 'serve',
     configureServer(server) {
       const cwd = server.config.root;
@@ -399,7 +399,7 @@ const openbentoSupabaseDevPlugin = (): Plugin => {
         // Table exists?
         try {
           const res = await fetch(
-            `${supabaseUrl}/rest/v1/openbento_analytics_events?select=id&limit=1`,
+            `${supabaseUrl}/rest/v1/profileflow_analytics_events?select=id&limit=1`,
             {
               headers: {
                 apikey: params.serviceRoleKey,
@@ -425,8 +425,8 @@ const openbentoSupabaseDevPlugin = (): Plugin => {
           }
         };
 
-        await checkFn('openbento-analytics-track');
-        await checkFn('openbento-analytics-admin');
+        await checkFn('profileflow-analytics-track');
+        await checkFn('profileflow-analytics-admin');
 
         // Admin token works?
         if (!params.adminToken) {
@@ -434,9 +434,9 @@ const openbentoSupabaseDevPlugin = (): Plugin => {
         } else {
           try {
             const res = await fetch(
-              `${supabaseUrl}/functions/v1/openbento-analytics-admin?siteId=${encodeURIComponent('openbento_dev')}&days=7`,
+              `${supabaseUrl}/functions/v1/profileflow-analytics-admin?siteId=${encodeURIComponent('profileflow_dev')}&days=7`,
               {
-                headers: { 'x-openbento-admin-token': params.adminToken },
+                headers: { 'x-profileflow-admin-token': params.adminToken },
               }
             );
             checks.adminAuth = { ok: res.ok, details: `${res.status} ${res.statusText}` };
@@ -455,7 +455,7 @@ const openbentoSupabaseDevPlugin = (): Plugin => {
         try {
           if (!req.url) return next();
 
-          if (req.method === 'POST' && req.url === '/__openbento/supabase/setup') {
+          if (req.method === 'POST' && req.url === '/__profileflow/supabase/setup') {
             const body = (await readJsonBody(req)) as any;
             const mode: 'existing' | 'create' = body?.mode === 'create' ? 'create' : 'existing';
 
@@ -510,7 +510,7 @@ const openbentoSupabaseDevPlugin = (): Plugin => {
               const projectName =
                 typeof body?.projectName === 'string' && body.projectName.trim()
                   ? body.projectName.trim()
-                  : `openbento-analytics-${Date.now()}`;
+                  : `profileflow-analytics-${Date.now()}`;
 
               const dbPassword =
                 typeof body?.dbPassword === 'string' && body.dbPassword.trim()
@@ -648,7 +648,7 @@ const openbentoSupabaseDevPlugin = (): Plugin => {
             await runSupabase([
               'functions',
               'deploy',
-              'openbento-analytics-track',
+              'profileflow-analytics-track',
               '--project-ref',
               projectRef,
               '--use-api',
@@ -657,7 +657,7 @@ const openbentoSupabaseDevPlugin = (): Plugin => {
             await runSupabase([
               'functions',
               'deploy',
-              'openbento-analytics-admin',
+              'profileflow-analytics-admin',
               '--project-ref',
               projectRef,
               '--use-api',
@@ -679,7 +679,7 @@ const openbentoSupabaseDevPlugin = (): Plugin => {
             return;
           }
 
-          if (req.method === 'GET' && req.url.startsWith('/__openbento/supabase/status')) {
+          if (req.method === 'GET' && req.url.startsWith('/__profileflow/supabase/status')) {
             const u = new URL(req.url, 'http://localhost');
             const projectRef =
               u.searchParams.get('projectRef')?.trim() ||
@@ -741,7 +741,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, '.', '');
   return {
     // Base URL pour GitHub Pages (utilise le nom du repo)
-    base: process.env.GITHUB_ACTIONS ? '/openbento/' : '/',
+    base: process.env.GITHUB_ACTIONS ? '/profileflow/' : '/',
     server: {
       port: 3000,
       host: '0.0.0.0',
@@ -754,7 +754,7 @@ export default defineConfig(({ mode }) => {
       }),
       react(),
       simpleSupabaseSetupPlugin(),
-      openbentoSupabaseDevPlugin(),
+      profileflowSupabaseDevPlugin(),
     ],
     define: {
       'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),

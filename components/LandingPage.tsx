@@ -116,7 +116,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
               <div className="w-9 h-9 bg-gray-900 text-white rounded-xl flex items-center justify-center font-bold text-sm shadow-sm">
                 B
               </div>
-              <span className="font-bold text-lg tracking-tight">OpenBento</span>
+              <span className="font-bold text-lg tracking-tight">ProfileFlow</span>
             </div>
             <div className="flex items-center gap-3">
               <a
@@ -171,7 +171,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
               <span>
                 Bento.me shuts down Feb 13, 2026 —{' '}
                 <span className="underline group-hover:text-orange-900">
-                  Don't be sad, OpenBento is here!
+                  Don't be sad, ProfileFlow is here!
                 </span>
               </span>
               <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
@@ -706,7 +706,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
               <div className="w-8 h-8 bg-gray-900 text-white rounded-lg flex items-center justify-center font-bold text-sm">
                 B
               </div>
-              <span className="font-semibold">OpenBento</span>
+              <span className="font-semibold">ProfileFlow</span>
             </div>
             <div className="flex items-center gap-6 text-sm text-gray-500">
               <a
@@ -725,7 +725,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
               >
                 <Github size={16} /> GitHub
               </a>
-              <span>&copy; {new Date().getFullYear()} OpenBento</span>
+              <span>&copy; {new Date().getFullYear()} ProfileFlow</span>
             </div>
           </div>
         </div>

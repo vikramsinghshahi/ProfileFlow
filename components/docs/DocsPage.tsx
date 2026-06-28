@@ -67,7 +67,7 @@ const DocsPage: React.FC = () => {
               <div className="w-8 h-8 bg-gray-900 text-white rounded-lg flex items-center justify-center font-bold text-sm">
                 B
               </div>
-              <span className="font-semibold text-gray-900">OpenBento</span>
+              <span className="font-semibold text-gray-900">ProfileFlow</span>
             </a>
             <span className="text-gray-300">/</span>
             <span className="text-gray-600">Docs</span>

@@ -4,7 +4,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers':
-    'authorization, x-client-info, apikey, content-type, x-openbento-admin-token',
+    'authorization, x-client-info, apikey, content-type, x-profileflow-admin-token',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
 };
 
@@ -42,7 +42,7 @@ const json = (body: unknown, status = 200) =>
   });
 
 const getToken = (req: Request): string | null => {
-  const headerToken = req.headers.get('x-openbento-admin-token');
+  const headerToken = req.headers.get('x-profileflow-admin-token');
   if (headerToken) return headerToken.trim();
   const auth = req.headers.get('authorization');
   if (!auth) return null;
@@ -83,7 +83,7 @@ Deno.serve(async (req) => {
   const since = new Date(Date.now() - rangeDays * 24 * 60 * 60 * 1000).toISOString();
 
   const { data, error } = await supabase
-    .from('openbento_analytics_events')
+    .from('profileflow_analytics_events')
     .select('created_at,event_type,block_id,destination_url,referrer')
     .eq('site_id', siteId)
     .gte('created_at', since)

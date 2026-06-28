@@ -9,7 +9,7 @@ export const generateDeployMd = (params: {
   target: ExportDeploymentTarget;
 }): string => `# Deploy ${params.name}
 
-This is a React/Vite/Tailwind project exported from OpenBento.
+This is a React/Vite/Tailwind project exported from ProfileFlow.
 
 ## Quick Start
 

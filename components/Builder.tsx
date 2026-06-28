@@ -394,7 +394,7 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
 
   const [deployTarget, setDeployTarget] = useState<ExportDeploymentTarget>(() => {
     try {
-      const stored = localStorage.getItem('openbento_deploy_target');
+      const stored = localStorage.getItem('profileflow_deploy_target');
       if (
         stored === 'vercel' ||
         stored === 'netlify' ||
@@ -417,7 +417,7 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
   const [analyticsDays, setAnalyticsDays] = useState<number>(30);
   const [analyticsAdminToken, setAnalyticsAdminToken] = useState<string>(() => {
     try {
-      return sessionStorage.getItem('openbento_analytics_admin_token') || '';
+      return sessionStorage.getItem('profileflow_analytics_admin_token') || '';
     } catch {
       return '';
     }
@@ -940,7 +940,7 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
 
   useEffect(() => {
     try {
-      localStorage.setItem('openbento_deploy_target', deployTarget);
+      localStorage.setItem('profileflow_deploy_target', deployTarget);
     } catch {
       // ignore
     }
@@ -989,10 +989,10 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
     setAnalyticsError(null);
 
     try {
-      const endpoint = `${supabaseUrl}/functions/v1/openbento-analytics-admin?siteId=${encodeURIComponent(activeBento.id)}&days=${encodeURIComponent(String(analyticsDays))}`;
+      const endpoint = `${supabaseUrl}/functions/v1/profileflow-analytics-admin?siteId=${encodeURIComponent(activeBento.id)}&days=${encodeURIComponent(String(analyticsDays))}`;
       const res = await fetch(endpoint, {
         headers: {
-          'x-openbento-admin-token': analyticsAdminToken.trim(),
+          'x-profileflow-admin-token': analyticsAdminToken.trim(),
         },
       });
       const json = await res.json().catch(() => ({}));
@@ -1075,7 +1075,7 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
         adminToken: analyticsAdminToken.trim() || undefined,
       };
 
-      const res = await fetch('/__openbento/supabase/setup', {
+      const res = await fetch('/__profileflow/supabase/setup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -1134,7 +1134,7 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
         supabaseSetupProjectRef.trim() || (url ? inferProjectRefFromSupabaseUrl(url) : '');
       if (!projectRef) throw new Error('Missing project ref (set it first).');
 
-      const endpoint = new URL('/__openbento/supabase/status', window.location.origin);
+      const endpoint = new URL('/__profileflow/supabase/status', window.location.origin);
       endpoint.searchParams.set('projectRef', projectRef);
       if (analyticsAdminToken.trim())
         endpoint.searchParams.set('adminToken', analyticsAdminToken.trim());
@@ -1156,7 +1156,7 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
 
   useEffect(() => {
     try {
-      sessionStorage.setItem('openbento_analytics_admin_token', analyticsAdminToken);
+      sessionStorage.setItem('profileflow_analytics_admin_token', analyticsAdminToken);
     } catch {
       // ignore
     }
@@ -1419,7 +1419,7 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
                   <Home size={16} />
                 </button>
               )}
-              <span className="font-bold text-gray-800 tracking-tight px-1">OpenBento</span>
+              <span className="font-bold text-gray-800 tracking-tight px-1">ProfileFlow</span>
               <div className="h-6 w-px bg-gray-200 mx-1"></div>
               {/* Profile Dropdown */}
               {activeBento && (
@@ -1932,7 +1932,7 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
                           <div className="w-full py-6 text-center text-sm text-gray-500 font-medium">
                             <p className="inline-flex items-center gap-1">
                               Made with <span className="text-red-400">♥</span> using{' '}
-                              <span className="font-semibold">OpenBento</span>
+                              <span className="font-semibold">ProfileFlow</span>
                             </p>
                           </div>
                         )}
@@ -2197,7 +2197,7 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
                 rel="noopener noreferrer"
                 className="text-gray-400 font-semibold hover:text-violet-500 transition-colors"
               >
-                OpenBento
+                ProfileFlow
               </a>
             </p>
           </footer>
@@ -2569,7 +2569,7 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
                               value={supabaseSetupProjectName}
                               onChange={(e) => setSupabaseSetupProjectName(e.target.value)}
                               className="w-full bg-white border border-gray-200 rounded-xl p-2.5 text-sm font-medium text-gray-700 focus:ring-2 focus:ring-black/5 focus:border-black focus:outline-none transition-all"
-                              placeholder={`openbento-analytics-${new Date().getFullYear()}`}
+                              placeholder={`profileflow-analytics-${new Date().getFullYear()}`}
                             />
                           </div>
                           <div>
@@ -2707,7 +2707,7 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
                       )}
                     </div>
                     <p className="text-[11px] text-gray-400">
-                      This dashboard reads from the <code>openbento-analytics-admin</code> Edge
+                      This dashboard reads from the <code>profileflow-analytics-admin</code> Edge
                       Function using your admin token.
                     </p>
                   </div>

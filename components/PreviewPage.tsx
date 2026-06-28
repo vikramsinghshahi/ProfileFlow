@@ -289,7 +289,7 @@ const PreviewPage: React.FC = () => {
                 rel="noopener noreferrer"
                 className="font-semibold hover:text-violet-500 transition-colors"
               >
-                OpenBento
+                ProfileFlow
               </a>
             </p>
           </footer>

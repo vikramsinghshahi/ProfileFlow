@@ -92,7 +92,7 @@ export const useAnalytics = (config: AnalyticsConfig | undefined) => {
         };
 
         // Use Edge Function endpoint (no API key needed - function handles auth)
-        const endpoint = `${config.supabaseUrl.replace(/\/+$/, '')}/functions/v1/openbento-analytics-track`;
+        const endpoint = `${config.supabaseUrl.replace(/\/+$/, '')}/functions/v1/profileflow-analytics-track`;
 
         fetch(endpoint, {
           method: 'POST',
