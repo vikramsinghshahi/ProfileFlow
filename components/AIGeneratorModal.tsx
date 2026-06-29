@@ -215,6 +215,24 @@ Note: Perfect for a row of small social icons. Use colSpan: 1, rowSpan: 1.
 { "type": "SPACER", "colSpan": 3, "rowSpan": 1 }
 \`\`\`
 
+### UPI - UPI Payment QR Code 🇮🇳 (India only)
+\`\`\`json
+{ "type": "UPI", "title": "Pay via UPI", "content": "yourname@okicici", "subtext": "500", "colSpan": 3, "rowSpan": 3, "color": "bg-green-50" }
+\`\`\`
+Note: \`content\` = UPI ID (e.g. name@okicici, name@paytm), \`subtext\` = fixed amount in ₹ (leave blank for any amount). Generates a live QR code.
+
+### WHATSAPP - WhatsApp Chat Button 🇮🇳 (India only)
+\`\`\`json
+{ "type": "WHATSAPP", "title": "Chat on WhatsApp", "content": "9999999999", "subtext": "Hi! I found you on ProfileFlow.", "colSpan": 3, "rowSpan": 3, "color": "bg-green-50" }
+\`\`\`
+Note: \`content\` = 10-digit Indian mobile number (without +91), \`subtext\` = pre-filled message that opens in WhatsApp.
+
+### RAZORPAY - Razorpay Payment Button 🇮🇳 (India only)
+\`\`\`json
+{ "type": "RAZORPAY", "title": "Buy Now", "content": "https://rzp.io/l/yourlink", "subtext": "₹999 — 1-hour consultation", "colSpan": 3, "rowSpan": 3, "color": "bg-blue-50" }
+\`\`\`
+Note: \`content\` = full Razorpay payment link URL, \`subtext\` = price/description displayed on the block.
+
 ---
 
 ## SUPPORTED SOCIAL PLATFORMS

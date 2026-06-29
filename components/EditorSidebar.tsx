@@ -824,6 +824,100 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({
                   />
                 </div>
               )}
+
+              {/* India Block Edit Fields */}
+              {editingBlock.type === BlockType.UPI && (
+                <div className="space-y-4 p-4 bg-green-50 rounded-2xl border border-green-100">
+                  <p className="text-xs font-bold text-green-700 uppercase tracking-wider">🇮🇳 UPI Settings</p>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">
+                      UPI ID *
+                    </label>
+                    <input
+                      type="text"
+                      className="w-full bg-white border border-gray-200 rounded-xl p-3 focus:ring-2 focus:ring-green-200 focus:border-green-500 focus:outline-none transition-all font-mono text-sm text-gray-700"
+                      value={editingBlock.content || ''}
+                      onChange={(e) => updateBlock({ ...editingBlock, content: e.target.value })}
+                      placeholder="yourname@okicici"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">
+                      Amount (₹) — optional
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      className="w-full bg-white border border-gray-200 rounded-xl p-3 focus:ring-2 focus:ring-green-200 focus:border-green-500 focus:outline-none transition-all text-sm text-gray-700"
+                      value={editingBlock.subtext || ''}
+                      onChange={(e) => updateBlock({ ...editingBlock, subtext: e.target.value })}
+                      placeholder="Leave blank for any amount"
+                    />
+                  </div>
+                  <p className="text-[10px] text-green-600">
+                    QR code regenerates automatically. Test on a real Android phone.
+                  </p>
+                </div>
+              )}
+
+              {editingBlock.type === BlockType.WHATSAPP && (
+                <div className="space-y-4 p-4 bg-green-50 rounded-2xl border border-green-100">
+                  <p className="text-xs font-bold text-green-700 uppercase tracking-wider">💬 WhatsApp Settings</p>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">
+                      Phone Number *
+                    </label>
+                    <input
+                      type="tel"
+                      className="w-full bg-white border border-gray-200 rounded-xl p-3 focus:ring-2 focus:ring-green-200 focus:border-green-500 focus:outline-none transition-all font-mono text-sm text-gray-700"
+                      value={editingBlock.content || ''}
+                      onChange={(e) => updateBlock({ ...editingBlock, content: e.target.value })}
+                      placeholder="9999999999 (without +91)"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">
+                      Pre-filled Message
+                    </label>
+                    <textarea
+                      className="w-full bg-white border border-gray-200 rounded-xl p-3 focus:ring-2 focus:ring-green-200 focus:border-green-500 focus:outline-none transition-all text-sm text-gray-700 h-20 resize-none"
+                      value={editingBlock.subtext || ''}
+                      onChange={(e) => updateBlock({ ...editingBlock, subtext: e.target.value })}
+                      placeholder="Hi! I found you on ProfileFlow."
+                    />
+                  </div>
+                </div>
+              )}
+
+              {editingBlock.type === BlockType.RAZORPAY && (
+                <div className="space-y-4 p-4 bg-blue-50 rounded-2xl border border-blue-100">
+                  <p className="text-xs font-bold text-blue-700 uppercase tracking-wider">💳 Razorpay Settings</p>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">
+                      Payment Link *
+                    </label>
+                    <input
+                      type="url"
+                      className="w-full bg-white border border-gray-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-200 focus:border-blue-500 focus:outline-none transition-all font-mono text-xs text-gray-700"
+                      value={editingBlock.content || ''}
+                      onChange={(e) => updateBlock({ ...editingBlock, content: e.target.value })}
+                      placeholder="https://rzp.io/l/yourlink"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">
+                      Description / Price shown
+                    </label>
+                    <input
+                      type="text"
+                      className="w-full bg-white border border-gray-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-200 focus:border-blue-500 focus:outline-none transition-all text-sm text-gray-700"
+                      value={editingBlock.subtext || ''}
+                      onChange={(e) => updateBlock({ ...editingBlock, subtext: e.target.value })}
+                      placeholder="e.g. ₹999 — 1-hour consultation"
+                    />
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Appearance (Colors) */}
@@ -932,6 +1026,40 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({
                       className={`w-10 h-10 rounded-xl ${btn.color} text-white flex items-center justify-center shadow-sm transition-colors`}
                     >
                       <btn.icon size={18} />
+                    </div>
+                    <span className="text-xs font-semibold text-gray-600">{btn.label}</span>
+                  </button>
+                ))}
+              </div>
+            </section>
+
+            {/* India Blocks */}
+            <section className="space-y-4">
+              <div className="flex items-center gap-2">
+                <div className="w-1 h-5 bg-orange-500 rounded-full"></div>
+                <h3 className="text-base font-bold text-gray-900">India Blocks</h3>
+                <span className="text-[10px] font-bold text-orange-600 bg-orange-50 border border-orange-200 px-2 py-0.5 rounded-full">
+                  🇮🇳 New
+                </span>
+              </div>
+
+              <div className="grid grid-cols-3 gap-3">
+                {[
+                  { type: BlockType.UPI, label: 'UPI Pay', emoji: '₹', color: 'bg-green-600' },
+                  { type: BlockType.WHATSAPP, label: 'WhatsApp', emoji: '💬', color: 'bg-[#25D366]' },
+                  { type: BlockType.RAZORPAY, label: 'Razorpay', emoji: '💳', color: 'bg-blue-600' },
+                ].map((btn) => (
+                  <button
+                    type="button"
+                    aria-label={`Add ${btn.label} Block`}
+                    key={btn.type}
+                    onClick={() => addBlock(btn.type)}
+                    className="flex flex-col items-center gap-2 p-4 bg-white border border-orange-100 rounded-2xl hover:border-orange-200 hover:shadow-lg transition-all group"
+                  >
+                    <div
+                      className={`w-10 h-10 rounded-xl ${btn.color} text-white flex items-center justify-center shadow-sm text-lg font-bold`}
+                    >
+                      {btn.emoji}
                     </div>
                     <span className="text-xs font-semibold text-gray-600">{btn.label}</span>
                   </button>

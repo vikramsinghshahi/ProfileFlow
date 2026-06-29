@@ -18,16 +18,23 @@
     "analytics:supabase:init": "node scripts/supabase-analytics-init.mjs"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.106.0",
     "@mdx-js/rollup": "^3.1.1",
+    "@supabase/supabase-js": "^2.108.2",
+    "@types/qrcode": "^1.5.6",
     "file-saver": "^2.0.5",
     "framer-motion": "^11.0.0",
     "jszip": "^3.10.1",
     "lucide-react": "^0.562.0",
+    "qrcode": "^1.5.4",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
+    "react-hot-toast": "^2.6.0",
     "react-icons": "^5.5.0",
+    "react-router-dom": "^7.18.0",
     "rehype-highlight": "^7.0.2",
-    "remark-gfm": "^4.0.1"
+    "remark-gfm": "^4.0.1",
+    "zustand": "^5.0.14"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",

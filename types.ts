@@ -6,6 +6,10 @@ export enum BlockType {
   SOCIAL_ICON = 'SOCIAL_ICON', // Small icon-only social block for 9x9 grid
   MAP = 'MAP',
   SPACER = 'SPACER',
+  // India-specific blocks
+  UPI = 'UPI',           // UPI QR code + Pay Now button
+  WHATSAPP = 'WHATSAPP', // WhatsApp chat button
+  RAZORPAY = 'RAZORPAY', // Razorpay payment link button
 }
 
 export type SocialPlatform =

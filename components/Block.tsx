@@ -15,6 +15,9 @@ import {
 import { motion } from 'framer-motion';
 import { getSocialPlatformOption, inferSocialPlatformFromUrl } from '../socialPlatforms';
 import { openSafeUrl, isValidYouTubeChannelId, isValidLocationString } from '../utils/security';
+import UpiBlockContent from './blocks/UpiBlockContent';
+import WhatsappBlockContent from './blocks/WhatsappBlockContent';
+import RazorpayBlockContent from './blocks/RazorpayBlockContent';
 
 // Apple TV style 3D tilt effect hook
 const useTiltEffect = (isEnabled: boolean = true) => {
@@ -835,6 +838,19 @@ const Block: React.FC<BlockProps> = ({
       }}
       onClick={() => {
         if (previewMode) {
+          // India blocks handle their own clicks internally
+          if (block.type === BlockType.UPI) return;
+          if (block.type === BlockType.WHATSAPP) {
+            const phone = (block.content || '').replace(/\D/g, '');
+            const fullPhone = phone.startsWith('91') ? phone : `91${phone}`;
+            const msg = block.subtext || '';
+            window.open(
+              `https://wa.me/${fullPhone}${msg ? `?text=${encodeURIComponent(msg)}` : ''}`,
+              '_blank',
+              'noopener,noreferrer'
+            );
+            return;
+          }
           // In preview mode, navigate to block URL with security validation
           let url = block.content;
           if (block.type === BlockType.SOCIAL && block.socialPlatform && block.socialHandle) {
@@ -994,8 +1010,30 @@ const Block: React.FC<BlockProps> = ({
         )}
 
         <div className="w-full h-full pointer-events-none relative z-10">
-          {/* MEDIA BLOCK (Image/Video/GIF) */}
-          {block.type === BlockType.MEDIA && block.imageUrl && !isLinkWithImage ? (
+          {/* INDIA BLOCKS */}
+          {block.type === BlockType.UPI ? (
+            <UpiBlockContent
+              upiId={block.content || ''}
+              name={block.title || ''}
+              amount={block.subtext || ''}
+              previewMode={previewMode}
+            />
+          ) : block.type === BlockType.WHATSAPP ? (
+            <WhatsappBlockContent
+              phone={block.content || ''}
+              label={block.title || 'Chat on WhatsApp'}
+              message={block.subtext || 'Hi! I found you on ProfileFlow.'}
+              previewMode={previewMode}
+            />
+          ) : block.type === BlockType.RAZORPAY ? (
+            <RazorpayBlockContent
+              paymentLink={block.content || ''}
+              label={block.title || 'Pay Now'}
+              description={block.subtext || ''}
+              previewMode={previewMode}
+            />
+          ) : /* MEDIA BLOCK (Image/Video/GIF) */
+          block.type === BlockType.MEDIA && block.imageUrl && !isLinkWithImage ? (
             <div
               ref={mediaContainerRef}
               className={`w-full h-full relative overflow-hidden ${isRepositioning ? 'cursor-move' : ''}`}

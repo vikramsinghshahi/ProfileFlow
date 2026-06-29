@@ -9,6 +9,9 @@ import { useHistory } from '../hooks/useHistory';
 import { useSaveStatus } from '../hooks/useSaveStatus';
 import AvatarStyleModal from './AvatarStyleModal';
 import AIGeneratorModal from './AIGeneratorModal';
+import AiBioWriter from './ai/AiBioWriter';
+import AiPageRoast from './ai/AiPageRoast';
+import { Toaster } from 'react-hot-toast';
 import { exportSite, type ExportDeploymentTarget } from '../services/export';
 import {
   initializeApp,
@@ -375,6 +378,7 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
   const [showAvatarCropModal, setShowAvatarCropModal] = useState(false);
   const [showAvatarStyleModal, setShowAvatarStyleModal] = useState(false);
   const [showAIGeneratorModal, setShowAIGeneratorModal] = useState(false);
+  const [showAIToolsPanel, setShowAIToolsPanel] = useState(false);
   const [pendingAvatarSrc, setPendingAvatarSrc] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'desktop' | 'mobile'>('desktop');
   const [isLoading, setIsLoading] = useState(true);
@@ -647,8 +651,25 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
               ? 'Location'
               : type === BlockType.SPACER
                 ? 'Spacer'
-                : 'New Block',
-      content: '',
+                : type === BlockType.UPI
+                  ? 'Pay via UPI'
+                  : type === BlockType.WHATSAPP
+                    ? 'Chat on WhatsApp'
+                    : type === BlockType.RAZORPAY
+                      ? 'Pay Now'
+                      : 'New Block',
+      content:
+        type === BlockType.UPI
+          ? 'yourname@upi'
+          : type === BlockType.WHATSAPP
+            ? '9999999999'
+            : type === BlockType.RAZORPAY
+              ? 'https://rzp.io/l/yourlink'
+              : '',
+      subtext:
+        type === BlockType.WHATSAPP
+          ? 'Hi! I found you on ProfileFlow.'
+          : '',
       colSpan,
       rowSpan,
       color:
@@ -656,7 +677,13 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
           ? 'bg-transparent'
           : type === BlockType.SOCIAL_ICON
             ? 'bg-gray-100'
-            : 'bg-white',
+            : type === BlockType.UPI
+              ? 'bg-green-50'
+              : type === BlockType.WHATSAPP
+                ? 'bg-green-50'
+                : type === BlockType.RAZORPAY
+                  ? 'bg-blue-50'
+                  : 'bg-white',
       textColor: 'text-gray-900',
       gridColumn: gridPosition.col,
       gridRow: gridPosition.row,
@@ -1539,14 +1566,28 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
                 </a>
               )}
 
-              {/* AI Generator */}
+              {/* AI Tools Panel */}
+              <button
+                onClick={() => setShowAIToolsPanel((v) => !v)}
+                className={`px-3.5 py-2 rounded-lg shadow-sm transition-all text-xs font-semibold flex items-center gap-2 ${
+                  showAIToolsPanel
+                    ? 'bg-orange-500 text-white hover:bg-orange-600'
+                    : 'bg-orange-100 text-orange-700 hover:bg-orange-200'
+                }`}
+                title="AI Tools — Bio Writer & Page Roast"
+              >
+                <Sparkles size={16} />
+                <span className="hidden sm:inline">AI Tools</span>
+              </button>
+
+              {/* AI Generator (full page) */}
               <button
                 onClick={() => setShowAIGeneratorModal(true)}
                 className="bg-gradient-to-r from-violet-500 to-purple-600 text-white px-3.5 py-2 rounded-lg shadow-sm hover:from-violet-600 hover:to-purple-700 transition-all text-xs font-semibold flex items-center gap-2"
-                title="Generate with AI"
+                title="Generate full page with AI"
               >
                 <Sparkles size={16} />
-                <span className="hidden sm:inline">AI</span>
+                <span className="hidden sm:inline">AI Page</span>
               </button>
 
               {/* JSON Import/Export */}
@@ -2278,7 +2319,63 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
         }}
       />
 
-      {/* 7. DEPLOY MODAL */}
+      {/* 7. AI TOOLS PANEL (slide-over) */}
+      <AnimatePresence>
+        {showAIToolsPanel && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowAIToolsPanel(false)}
+              className="fixed inset-0 z-[55] bg-black/30 backdrop-blur-sm"
+            />
+            {/* Panel */}
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 28, stiffness: 300 }}
+              className="fixed top-0 right-0 h-full z-[56] w-full max-w-sm bg-white shadow-2xl flex flex-col overflow-hidden"
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+                <div className="flex items-center gap-2">
+                  <Sparkles size={18} className="text-orange-500" />
+                  <h2 className="text-base font-bold text-gray-900">AI Tools</h2>
+                </div>
+                <button
+                  onClick={() => setShowAIToolsPanel(false)}
+                  className="p-1.5 hover:bg-gray-100 rounded-full text-gray-500 transition-colors"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+
+              {/* Scrollable content */}
+              <div className="flex-1 overflow-y-auto p-4 space-y-5">
+                <AiBioWriter
+                  isPaidUser={false}
+                  onSelectBio={(bio) =>
+                    handleSetProfile((prev) => ({ ...prev, bio }))
+                  }
+                  onUpgradeClick={() => setShowAIToolsPanel(false)}
+                />
+                <AiPageRoast
+                  bio={profile.bio ?? ''}
+                  blockTypes={blocks.map((b) => b.type)}
+                  totalBlocks={blocks.length}
+                  isPaidUser={false}
+                  onUpgradeClick={() => setShowAIToolsPanel(false)}
+                />
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* 8. DEPLOY MODAL */}
       <AnimatePresence>
         {showDeployModal && (
           <motion.div
@@ -2796,6 +2893,8 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <Toaster position="bottom-center" toastOptions={{ duration: 3000 }} />
     </div>
   );
 };
